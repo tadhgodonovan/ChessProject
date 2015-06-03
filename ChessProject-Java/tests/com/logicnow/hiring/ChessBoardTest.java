@@ -1,12 +1,10 @@
 package com.logicnow.hiring;
 
 import junit.framework.TestCase;
-import org.junit.After;
+
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-
-import static org.junit.Assert.*;
 
 public class ChessBoardTest extends TestCase {
 
@@ -18,13 +16,13 @@ public class ChessBoardTest extends TestCase {
     }
 
     @Test
-    public void testHas_MaxBoardWidth_of_7() {
-        assertEquals(7, ChessBoard.MAX_BOARD_HEIGHT);
+    public void testHas_MaxBoardWidth_of_8() {
+        assertEquals(8, ChessBoard.MAX_BOARD_HEIGHT);
     }
 
     @Test
-    public void testHas_MaxBoardHeight_of_7() {
-        assertEquals(7, ChessBoard.MAX_BOARD_HEIGHT);
+    public void testHas_MaxBoardHeight_of_8() {
+        assertEquals(8, ChessBoard.MAX_BOARD_HEIGHT);
     }
 
     @Test
@@ -42,7 +40,21 @@ public class ChessBoardTest extends TestCase {
     @Test
     public void testIsLegalBoardPosition_False_X_equals_11_Y_equals_5() {
         boolean isValidPosition = testSubject.IsLegalBoardPosition(11, 5);
-        assertTrue(isValidPosition);
+        assertFalse(isValidPosition);
+    }
+
+    // Test bounds position
+    @Test
+    public void testIsLegalBoardPosition_False_X_equals_8_Y_equals_5() {
+        boolean isValidPosition = testSubject.IsLegalBoardPosition(8, 5);
+        assertFalse(isValidPosition);
+    }
+
+    // Test bounds position
+    @Test
+    public void testIsLegalBoardPosition_False_X_equals_7_Y_equals_8() {
+        boolean isValidPosition = testSubject.IsLegalBoardPosition(7, 8);
+        assertFalse(isValidPosition);
     }
 
     @Test
@@ -91,8 +103,33 @@ public class ChessBoardTest extends TestCase {
             else
             {
                 assertEquals(-1, pawn.getXCoordinate());
-                Assert.assertEquals(-1, pawn.getYCoordinate());
+                assertEquals(-1, pawn.getYCoordinate());
             }
         }
     }
+    
+    // Can only add MAX_NUM_PIECES (8) pawn pieces of the same color
+    @Test
+    public void testLimits_The_NumberBlack_Of_Pawns()
+    {
+        for (int i = 0; i < 10; i++)
+        {
+            Pawn pawn = new Pawn(PieceColor.BLACK);
+            if( i < Pawn.MAX_NUM_PIECES )
+                testSubject.Add(pawn, 6, i, PieceColor.BLACK);
+            else
+                testSubject.Add(pawn, 5, i - Pawn.MAX_NUM_PIECES, PieceColor.BLACK);
+            if (i < Pawn.MAX_NUM_PIECES)
+            {
+                assertEquals(6, pawn.getXCoordinate());
+                assertEquals(i, pawn.getYCoordinate());
+            }
+            else
+            {
+                assertEquals(-1, pawn.getXCoordinate());
+                assertEquals(-1, pawn.getYCoordinate());
+            }
+        }
+    }
+    
 }
